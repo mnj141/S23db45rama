@@ -4,11 +4,31 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+require('dotenv').config();
+const connectionString =
+  process.env.MONGO_CON
+mongoose = require('mongoose');
+mongoose.connect(connectionString,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+
+//Get the default connection
+var db = mongoose.connection;
+//Bind connection to error event
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once("open", function () {
+  console.log("Connection to DB succeeded")
+});
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var electronicsRouter = require('./routes/electronics');
 var boardRouter = require('./routes/board');
 var selectorRouter = require('./routes/selector');
+var Electronics = require("./models/electronics");
+var resourceRouter = require('./routes/resource');
 
 var app = express();
 
@@ -26,14 +46,16 @@ app.use('/', indexRouter);
 app.use('/electronics', electronicsRouter);
 app.use('/board', boardRouter);
 app.use('/selector', selectorRouter);
+app.use('/resource', resourceRouter);
+
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -42,5 +64,43 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// We can seed the collection if needed on server start
+async function recreateDB() {
+  // Delete everything
+  await Electronics.deleteMany();
+  let instance1 = new
+  Electronics({
+    electronicsName: "samsung", electronicsType: 'Mobile', electronicCost: 50000
+  });
+  
+  let instance2 = new
+    Electronics({
+      electronicsName: "lenova", electronicsType: 'laptop', electronicCost: 75000
+  }); 
+
+  let instance3 = new
+    Electronics({
+      electronicsName: "boat", electronicsType: 'earphones', electronicCost: 3000
+  });
+
+  instance1.save().then(function (err, doc) {
+    if (err) return console.error(err);
+    console.log("First object saved")
+  });
+
+  instance2.save().then(function (err, doc) {
+    if (err) return console.error(err);
+    console.log("Second object saved")
+  });
+
+  instance3.save().then(function (err, doc) {
+    if (err) return console.error(err);
+    console.log("Third object saved")
+  });
+
+}
+let reseed = true;
+if (reseed) { recreateDB(); }
 
 module.exports = app;
