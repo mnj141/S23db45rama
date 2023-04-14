@@ -8,13 +8,13 @@ var electronics_controller = require('../controllers/electronics');
 router.get('/', api_controller.api);
 /// ELECTRONICS ROUTES ///
 // POST request for creating a electronics.
-router.post('/electronicss', electronics_controller.electronics_create_post);
+router.post('/electronics', electronics_controller.electronics_create_post);
 // DELETE request to delete electronics.
-router.delete('/electronicss/:id', electronics_controller.electronics_delete);
+router.delete('/electronics/:id', electronics_controller.electronics_delete);
 // PUT request to update electronics.
-router.put('/electronicss/:id', electronics_controller.electronics_update_put);
+router.put('/electronics/:id', electronics_controller.electronics_update_put);
 // GET request for one electronics.
-router.get('/electronicss/:id', electronics_controller.electronics_detail);
+router.get('/electronics/:id', electronics_controller.electronics_detail);
 // GET request for list of all electronics items.
-router.get('/electronicss', electronics_controller.electronics_list);
+router.get('/electronics', electronics_controller.electronics_list);
 module.exports = router;
