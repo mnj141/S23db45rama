@@ -4,9 +4,10 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  color: #101112;
 }
+
 .electronicAttr {
-  background-color: aquamarine;
+  background-color: rgb(108, 23, 44);
   width: 120px;
  }
